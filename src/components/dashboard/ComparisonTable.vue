@@ -41,7 +41,7 @@ const data = computed(() => {
 const dateColumnStaticText = '<br>Sales / Units<br>AVG. Selling Price'
 const headers = computed(() => {
   const baseHeaders = [
-    { align: 'text-center', text: 'Image', value: 'imageUrl' },
+    { text: 'Image', value: 'imageUrl' },
     { text: 'SKU', value: 'sku' },
     { text: 'Product', value: 'productName' },
     { text: `${dateWithDay(first(selectedDates.value))} ${dateColumnStaticText}`, value: 'date1', align: 'text-right' },
