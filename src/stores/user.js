@@ -1,12 +1,13 @@
 import { defineStore } from 'pinia'
 import { request } from '@/utils'
-import { useMessageStore } from '@/stores'
+import { useMessageStore, useSalesStore } from '@/stores'
 import CONSTANTS from '@/CONSTANTS'
 import router from '@/router'
 
-const messageStore = useMessageStore()
-
 export const useUserStore = defineStore('user', () => {
+  const messageStore = useMessageStore()
+  const salesStore = useSalesStore()
+
   const state = reactive({
     user: {},
     marketplace: null,
@@ -14,7 +15,9 @@ export const useUserStore = defineStore('user', () => {
   })
 
   const login = async payload => {
-    payload = {
+    let response = false
+
+    const loginPayload = {
       ...payload,
       GrantType: 'password',
       Scope: 'amazon_data',
@@ -23,52 +26,52 @@ export const useUserStore = defineStore('user', () => {
       RedirectUri: 'https://api.eva.guru',
     }
 
-    await request('post', CONSTANTS?.api?.login, payload).then(res => {
+    try {
+      const res = await request('post', CONSTANTS?.api?.login, loginPayload)
+
       if (res?.Data?.AccessToken) {
         sessionStorage.setItem('token', res.Data.AccessToken)
         sessionStorage.setItem('email', payload.Email)
-
-        router.push({ path: CONSTANTS.routes.dashboard })
+        response = true
       } else {
         messageStore.setError({ error: CONSTANTS?.errors?.users?.loginError })
       }
-    })
+    } catch (error) {
+      messageStore.setError({ error: CONSTANTS?.errors?.users?.loginError })
+    }
+
+    return response
   }
 
   const fetchMe = async () => {
     const email = sessionStorage.getItem('email') || ''
-    let hasError = false
+    let hasError = true
 
     if (email) {
       const payload = { email }
 
-      await request('post', CONSTANTS?.api?.me, payload).then(res => {
+      try {
+        const res = await request('post', CONSTANTS?.api?.me, payload)
         if (res?.Data?.user) {
           state.user = res.Data.user
 
-          if (Array.isArray(res.Data.user?.store) && res.Data.user.store.length) {
-            const store = res.Data.user.store[0]
-            if (store?.storeId) {
-              state.marketplace = store.marketplaceName
-            }
+          const store = res.Data.user?.store?.[0]
 
-            if (store?.storeId) {
-              state.sellerId = store.storeId
-            }
+          if (store?.marketplaceName && store?.storeId) {
+            state.marketplace = store.marketplaceName
+            state.sellerId = store.storeId
+            hasError = false
+
+            await salesStore.fetchDailySalesOverview()
           }
-        } else {
-          hasError = true
         }
-      })
-    } else {
-      hasError = true
+      } catch (error) {}
     }
 
     if (hasError) {
       sessionStorage.removeItem('token')
       sessionStorage.removeItem('email')
-      messageStore.setError({ error: CONSTANTS?.errors?.users?.invalidToken })
-
+      messageStore.setError({ error: CONSTANTS?.errors?.users?.userData })
       router.push({ path: '/' })
     }
   }
