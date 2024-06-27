@@ -16,7 +16,7 @@ export default {
     dashboard: { maxComparisonDays: 'You can not compare more than 2 days' },
     noData: 'No data available',
     sales: { errorFetching: 'Error fetching sales' },
-    users: { loginError: 'Invalid Credentials', invalidToken: 'Invalid Token' },
+    users: { loginError: 'Invalid Credentials', invalidToken: 'Invalid Token', userData: 'Error fetching user data' },
   },
   maxComparisonDays: 2,
   routes: { dashboard: '/dashboard' },

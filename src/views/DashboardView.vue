@@ -101,7 +101,6 @@ watch(
 
 onBeforeMount(async () => {
   await userStore.fetchMe()
-  await salesStore.fetchDailySalesOverview()
 })
 </script>
 
