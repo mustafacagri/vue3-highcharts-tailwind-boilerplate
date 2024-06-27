@@ -8,6 +8,14 @@
 - **Vite**: Lightning-fast build tool that ensures your development experience is as smooth as silk.
 - **i18n**: Ready to go with translations, though not yet implemented.
 
+## 🎥 Demo
+
+https://github.com/mustafacagri/vue3-highcharts-tailwind-boilerplate/assets/7488394/099e6d53-f6c0-4e23-b0d8-d195d8cd231b
+
+### 🔑 Credentials
+- homework@eva.guru
+- Homeworkeva1**
+
 ## Component Structure
 
 - **Skeletons**
