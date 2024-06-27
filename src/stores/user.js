@@ -58,7 +58,6 @@ export const useUserStore = defineStore('user', () => {
           const store = res.Data.user?.store?.[0]
 
           if (store?.marketplaceName && store?.storeId) {
-            console.log('if')
             state.marketplace = store.marketplaceName
             state.sellerId = store.storeId
             hasError = false
