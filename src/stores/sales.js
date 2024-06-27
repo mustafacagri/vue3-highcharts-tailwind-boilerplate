@@ -69,38 +69,47 @@ export const useSalesStore = defineStore('sales', () => {
 
     if (isEmpty(dates) || !Array.isArray(dates)) {
       state.skuRefundRates = []
+      return
+    }
+
+    state.isSkuRefundRatesLoading = true
+    const data = buildRequestData(dates, pageNumber)
+
+    try {
+      const res = await request('post', CONSTANTS?.api?.sales?.skuData, data)
+      handleSkuResponse(res, pageNumber)
+    } catch (error) {
+      messageStore.setError({ error: CONSTANTS?.errors?.sales?.errorFetching })
+    }
+  }
+
+  const buildRequestData = (dates, pageNumber) => {
+    const data = {
+      isDaysCompare: dates.length > 1 ? 1 : 0,
+      marketplace: userStore.marketplace,
+      pageNumber,
+      pageSize: CONSTANTS.defaultRecordSize,
+      salesDate: first(dates),
+      sellerId: userStore.sellerId,
+    }
+
+    if (dates.length > 1) {
+      data.salesDate2 = dates[1]
+    }
+
+    return data
+  }
+
+  const handleSkuResponse = (res, pageNumber) => {
+    if (!isEmpty(res?.Data)) {
+      if (pageNumber === 1) {
+        state.skuData = res.Data
+      } else {
+        state.skuData.item.skuList = [...state.skuData.item.skuList, ...res.Data.item.skuList]
+      }
+      fetchSkuRefundRates()
     } else {
-      state.isSkuRefundRatesLoading = true
-
-      const data = {
-        isDaysCompare: dates.length > 1 ? 1 : 0,
-        marketplace: userStore.marketplace,
-        pageNumber,
-        pageSize: CONSTANTS.defaultRecordSize,
-        salesDate: first(dates),
-        sellerId: userStore.sellerId,
-      }
-
-      if (dates.length > 1) {
-        data.salesDate2 = dates[1]
-      }
-
-      try {
-        const res = await request('post', CONSTANTS?.api?.sales?.skuData, data)
-
-        if (!isEmpty(res?.Data)) {
-          if (pageNumber === 1) {
-            state.skuData = res.Data
-          } else {
-            state.skuData.item.skuList = [...state.skuData.item.skuList, ...res.Data.item.skuList]
-          }
-          fetchSkuRefundRates()
-        } else {
-          messageStore.setError({ error: CONSTANTS?.errors?.sales?.errorFetching })
-        }
-      } catch (error) {
-        messageStore.setError({ error: CONSTANTS?.errors?.sales?.errorFetching })
-      }
+      messageStore.setError({ error: CONSTANTS?.errors?.sales?.errorFetching })
     }
   }
 
