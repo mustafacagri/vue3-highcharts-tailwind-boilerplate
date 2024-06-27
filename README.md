@@ -12,9 +12,14 @@
 
 https://github.com/mustafacagri/vue3-highcharts-tailwind-boilerplate/assets/7488394/099e6d53-f6c0-4e23-b0d8-d195d8cd231b
 
+### 🌐 Live Demo
+
+- https://vue3-highcharts-tailwind.web.app/
+
 ### 🔑 Credentials
+
 - homework@eva.guru
-- Homeworkeva1**
+- Homeworkeva1\*\*
 
 ## Component Structure
 
