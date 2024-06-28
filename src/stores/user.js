@@ -44,6 +44,7 @@ export const useUserStore = defineStore('user', () => {
   }
 
   const fetchMe = async () => {
+    salesStore.dailySalesOverview = []
     const email = sessionStorage.getItem('email') || ''
     let hasError = true
 
