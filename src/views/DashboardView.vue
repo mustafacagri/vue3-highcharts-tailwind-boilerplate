@@ -29,6 +29,7 @@ const dailySalesOverview = computed(() => {
   ]
 
   return {
+    accessibility: { enabled: false },
     colors: ['#71ecc5', '#7f85e9', '#5d33eb'],
     chart: { type: 'column' },
     title: { text: 'Daily Sales', align: 'left' },
