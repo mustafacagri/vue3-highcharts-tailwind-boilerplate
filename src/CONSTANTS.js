@@ -1,4 +1,4 @@
-const getConfig = () => ({
+const config = {
   api: {
     login: 'oauth/token',
     me: 'user/user-information',
@@ -22,14 +22,13 @@ const getConfig = () => ({
       userData: 'Error fetching user data',
       email: 'Invalid Email',
       get password() {
-        return `Password should be at least ${this.password.minLength || 8} characters long`
+        return `Password should be at least ${config?.password?.minLength || 8} characters`
       },
     },
   },
   maxComparisonDays: 2,
   password: { minLength: 8 },
   routes: { dashboard: '/dashboard' },
-})
+}
 
-// Export the configuration
-export default getConfig()
+export default config
