@@ -13,8 +13,9 @@ const isLoading = ref(false)
 
 const handleLogin = async () => {
   isLoading.value = true
-  const payload = { Email: email.value, Password: password.value }
+
   try {
+    const payload = { Email: email.value, Password: password.value }
     const res = await userStore.login(payload)
     if (res) {
       await router.push({ path: CONSTANTS.routes.dashboard })

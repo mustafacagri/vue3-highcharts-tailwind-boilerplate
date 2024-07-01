@@ -3,6 +3,7 @@ import { request } from '@/utils'
 import { useMessageStore, useSalesStore } from '@/stores'
 import CONSTANTS from '@/CONSTANTS'
 import router from '@/router'
+import validator from 'validator'
 
 export const useUserStore = defineStore('user', () => {
   const messageStore = useMessageStore()
@@ -16,6 +17,16 @@ export const useUserStore = defineStore('user', () => {
 
   const login = async payload => {
     let response = false
+
+    if (!validator.isEmail(payload?.Email)) {
+      messageStore.setError({ error: CONSTANTS?.errors?.users?.email })
+
+      return response
+    } else if (!validator.isLength(payload?.Password, { min: CONSTANTS?.password?.minLength })) {
+      messageStore.setError({ error: CONSTANTS?.errors?.users?.password })
+
+      return response
+    }
 
     const loginPayload = {
       ...payload,

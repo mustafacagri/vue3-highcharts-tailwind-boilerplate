@@ -1,4 +1,4 @@
-export default {
+const getConfig = () => ({
   api: {
     login: 'oauth/token',
     me: 'user/user-information',
@@ -16,8 +16,20 @@ export default {
     dashboard: { maxComparisonDays: 'You can not compare more than 2 days' },
     noData: 'No data available',
     sales: { errorFetching: 'Error fetching sales' },
-    users: { loginError: 'Invalid Credentials', invalidToken: 'Invalid Token', userData: 'Error fetching user data' },
+    users: {
+      loginError: 'Invalid Credentials',
+      invalidToken: 'Invalid Token',
+      userData: 'Error fetching user data',
+      email: 'Invalid Email',
+      get password() {
+        return `Password should be at least ${this.password.minLength || 8} characters long`
+      },
+    },
   },
   maxComparisonDays: 2,
+  password: { minLength: 8 },
   routes: { dashboard: '/dashboard' },
-}
+})
+
+// Export the configuration
+export default getConfig()
